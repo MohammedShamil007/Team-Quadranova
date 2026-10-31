@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Brightloop</title>
+    <link rel="stylesheet" href="/assets/dashboard.css">
+    <script src="/assets/dashboard.js" defer></script>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <aside class="sidebar" id="sidebar">
+        <a href="/" class="brand">
+            <span class="brand-icon">B</span>
+            <span>brightloop<span class="blue-dot">.</span></span>
+        </a>
+
+        <div class="workspace-label">WORKSPACE</div>
+
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-section="overview">
+                <span>▦</span> Overview
+            </button>
+            <button class="nav-item" data-section="products">
+                <span>▤</span> Products
+            </button>
+            <button class="nav-item" data-section="plans">
+                <span>◷</span> Subscription Plans
+            </button>
+            <button class="nav-item" data-section="subscriptions">
+                <span>↻</span> My Subscriptions
+            </button>
+            <button class="nav-item" data-section="invoices">
+                <span>▧</span> Invoices
+            </button>
+            <button class="nav-item" data-section="payments">
+                <span>◇</span> Payments
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="workspace-label">ACCOUNT</div>
+            <button class="nav-item" data-section="account">
+                <span>⚙</span> Account Settings
+            </button>
+            <button class="nav-item logout-item" id="logoutButton">
+                <span>↪</span> Log out
+            </button>
+        </div>
+
+        <div class="sidebar-footer">
+            <span class="brand-icon small">B</span>
+            <div>
+                <strong>Brightloop Software</strong>
+                <small>Subscription workspace</small>
+            </div>
+        </div>
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+
+            <div class="breadcrumb">
+                Workspace <span>/</span>
+                <strong id="breadcrumbTitle">Overview</strong>
+            </div>
+
+            <div class="topbar-user">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <strong id="userEmail">Loading...</strong>
+                    <small>Customer account</small>
+                </div>
+            </div>
+        </header>
+
+
+        <div class="page-content">
+
+            <div class="alert-message" id="alertMessage"></div>
+
+            <!-- OVERVIEW -->
+            <section class="page-section active" id="section-overview">
+
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow">YOUR WORKSPACE</span>
+                        <h1>Overview</h1>
+                        <p>Manage your products, subscriptions and billing.</p>
+                    </div>
+                    <button class="primary-button" data-go="subscriptions">
+                        + New subscription
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Products</span>
+                        <strong id="productCount">—</strong>
+                        <small>Available products</small>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-label">Subscription plans</span>
+                        <strong id="planCount">—</strong>
+                        <small>Available plans</small>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-label">My subscriptions</span>
+                        <strong id="subscriptionCount">—</strong>
+                        <small>Your subscription records</small>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-label">Outstanding invoices</span>
+                        <strong id="invoiceCount">—</strong>
+                        <small>Invoices with a balance due</small>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-heading">
+                        <div>
+                            <h2>Recent subscriptions</h2>
+                            <p>Your latest subscription records.</p>
+                        </div>
+                        <button class="text-button" data-go="subscriptions">
+                            View all →
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Subscription</th>
+                                    <th>Plan ID</th>
+                                    <th>Start date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentSubscriptions">
+                                <tr><td colspan="4" class="empty-cell">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-heading">
+                        <div>
+                            <h2>Recent invoices</h2>
+                            <p>Your latest billing records.</p>
+                        </div>
+                        <button class="text-button" data-go="invoices">
+                            View all →
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Invoice</th>
+                                    <th>Issue date</th>
+                                    <th>Total</th>
+                                    <th>Balance due</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentInvoices">
+                                <tr><td colspan="5" class="empty-cell">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- PRODUCTS -->
+            <section class="page-section" id="section-products">
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow">CATALOG</span>
+                        <h1>Products</h1>
+                        <p>Browse the products available in Brightloop.</p>
+                    </div>
+                    <button class="primary-button" id="showProductForm">
+                        + Add product
+                    </button>
+                </div>
+
+                <div class="content-card form-card hidden" id="productFormCard">
+                    <h2>Create product</h2>
+                    <form id="productForm" class="form-grid">
+                        <label>
+                            Product name
+                            <input name="name" required maxlength="150">
+                        </label>
+                        <label>
+                            Product type
+                            <select name="type" required>
+                                <option value="SOFTWARE">Software</option>
+                                <option value="ADD_ON">Add-on</option>
+                                <option value="SERVICE">Service</option>
+                            </select>
+                        </label>
+                        <label>
+                            Sales price (minor units)
+                            <input name="sales_price_minor_units" type="number"
+                                   min="0" value="0" required>
+                        </label>
+                        <label>
+                            Cost price (minor units)
+                            <input name="cost_price_minor_units" type="number"
+                                   min="0" value="0" required>
+                        </label>
+                        <label class="full-width">
+                            Notes
+                            <textarea name="notes"></textarea>
+                        </label>
+                        <div class="form-actions full-width">
+                            <button type="button" class="secondary-button"
+                                    id="cancelProductForm">Cancel</button>
+                            <button type="submit" class="primary-button">
+                                Save product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="content-card">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Type</th>
+                                    <th>Sales price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTable">
+                                <tr><td colspan="4" class="empty-cell">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- PLANS -->
+            <section class="page-section" id="section-plans">
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow">SUBSCRIPTION CATALOG</span>
+                        <h1>Subscription Plans</h1>
+                        <p>Browse available subscription plans.</p>
+                    </div>
+                    <button class="primary-button" id="showPlanForm">
+                        + Create plan
+                    </button>
+                </div>
+
+                <div class="content-card form-card hidden" id="planFormCard">
+                    <h2>Create subscription plan</h2>
+                    <form id="planForm" class="form-grid">
+                        <label>
+                            Plan name
+                            <input name="name" required>
+                        </label>
+                        <label>
+                            Billing frequency
+                            <select name="billing_frequency" required>
+                                <option value="MONTHLY">Monthly</option>
+                                <option value="YEARLY">Yearly</option>
+                                <option value="WEEKLY">Weekly</option>
+                                <option value="DAILY">Daily</option>
+                            </select>
+                        </label>
+                        <label>
+                            Base cost (minor units)
+                            <input name="base_cost_minor_units" type="number"
+                                   min="0" value="0" required>
+                        </label>
+                        <label>
+                            Minimum quantity
+                            <input name="minimum_quantity" type="number"
+                                   min="1" value="1" required>
+                        </label>
+                        <label>
+                            Available from
+                            <input name="available_from" type="date" required>
+                        </label>
+                        <label>
+                            Available until (optional)
+                            <input name="available_until" type="date">
+                        </label>
+                        <label>
+                            Currency
+                            <input name="currency" value="USD" maxlength="3" required>
+                        </label>
+                        <div class="form-actions full-width">
+                            <button type="button" class="secondary-button"
+                                    id="cancelPlanForm">Cancel</button>
+                            <button type="submit" class="primary-button">
+                                Save plan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="content-card">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Plan</th>
+                                    <th>Frequency</th>
+                                    <th>Base cost</th>
+                                    <th>Currency</th>
+                                    <th>Available from</th>
+                                </tr>
+                            </thead>
+                            <tbody id="plansTable">
+                                <tr><td colspan="5" class="empty-cell">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SUBSCRIPTIONS -->
+            <section class="page-section" id="section-subscriptions">
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow">YOUR CONTRACTS</span>
+                        <h1>My Subscriptions</h1>
+                        <p>View and create your subscription records.</p>
+                    </div>
+                    <button class="primary-button" id="showSubscriptionForm">
+                        + New subscription
+                    </button>
+                </div>
+
+                <div class="content-card form-card hidden" id="subscriptionFormCard">
+                    <h2>Create subscription</h2>
+
+                    <form id="subscriptionForm" class="form-grid">
+                        <label class="full-width">
+                            Subscription plan
+                            <select name="plan_id" id="subscriptionPlan"
+                                    required></select>
+                        </label>
+
+                        <label>
+                            Start date
+                            <input name="start_date" type="date" required>
+                        </label>
+
+                        <label>
+                            Expiry date (optional)
+                            <input name="expiry_date" type="date">
+                        </label>
+
+                        <div class="full-width line-item-heading">
+                            <h3>Subscription item</h3>
+                        </div>
+
+                        <label>
+                            Product
+                            <select name="product_id" id="subscriptionProduct"
+                                    required></select>
+                        </label>
+
+                        <label>
+                            Quantity
+                            <input name="quantity" type="number"
+                                   min="1" value="1" required>
+                        </label>
+
+                        <label>
+                            Unit price (minor units)
+                            <input name="unit_price_minor_units" type="number"
+                                   min="0" value="0" required>
+                        </label>
+
+                        <label>
+                            Tax rate (basis points)
+                            <input name="tax_rate_basis_points" type="number"
+                                   min="0" max="100000" value="0" required>
+                        </label>
+
+                        <div class="form-actions full-width">
+                            <button type="button" class="secondary-button"
+                                    id="cancelSubscriptionForm">Cancel</button>
+                            <button type="submit" class="primary-button">
+                                Create subscription
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="content-card">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Subscription</th>
+                                    <th>Plan</th>
+                                    <th>Start date</th>
+                                    <th>Expiry date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subscriptionsTable">
+                                <tr><td colspan="6" class="empty-cell">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- INVOICES -->
+            <section class="page-section" id="section-invoices">
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow">BILLING</span>
+                        <h1>Invoices</h1>
+                        <p>View your invoices and outstanding balances.</p>
+                    </div>
+                    <button class="primary-button" id="showInvoiceForm">
+                        + Generate invoice
+                    </button>
+                </div>
+
+                <div class="content-card form-card hidden" id="invoiceFormCard">
+                    <h2>Generate invoice</h2>
+                    <form id="invoiceForm" class="form-grid">
+                        <label>
+                            Subscription
+                            <select name="subscription_id"
+                                    id="invoiceSubscription" required></select>
+                        </label>
+                        <label>
+                            Due days
+                            <input name="due_days" type="number"
+                                   min="0" max="365" value="30" required>
+                        </label>
+                        <label>
+                            Billing period start
+                            <input name="billing_period_start"
+                                   type="date" required>
+                        </label>
+                        <label>
+                            Billing period end
+                            <input name="billing_period_end"
+                                   type="date" required>
+                        </label>
+                        <div class="form-actions full-width">
+                            <button type="button" class="secondary-button"
+                                    id="cancelInvoiceForm">Cancel</button>
+                            <button type="submit" class="primary-button">
+                                Generate invoice
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="content-card">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Invoice</th>
+                                    <th>Subscription</th>
+                                    <th>Issue date</th>
+                                    <th>Total</th>
+                                    <th>Balance due</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTable">
+                                <tr><td colspan="7" class="empty-cell">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- PAYMENTS -->
+            <section class="page-section" id="section-payments">
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow">FINANCE</span>
+                        <h1>Payments</h1>
+                        <p>Record payments against your invoices.</p>
+                    </div>
+                </div>
+
+                <div class="content-card form-card">
+                    <h2>Record a payment</h2>
+                    <p class="form-description">
+                        This records a payment entry in Brightloop.
+                        It does not process a card or bank transaction.
+                    </p>
+
+                    <form id="paymentForm" class="form-grid">
+                        <label class="full-width">
+                            Invoice
+                            <select name="invoice_id" id="paymentInvoice"
+                                    required></select>
+                        </label>
+
+                        <label>
+                            Amount (minor units)
+                            <input name="amount_minor_units" type="number"
+                                   min="1" required>
+                        </label>
+
+                        <label>
+                            Payment method
+                            <select name="payment_method" required>
+                                <option value="BANK_TRANSFER">Bank transfer</option>
+                                <option value="CREDIT_CARD">Credit card</option>
+                                <option value="GATEWAY">Gateway</option>
+                                <option value="CHECK">Check</option>
+                            </select>
+                        </label>
+
+                        <label>
+                            Transaction reference
+                            <input name="transaction_reference">
+                        </label>
+
+                        <label>
+                            Notes
+                            <input name="notes">
+                        </label>
+
+                        <div class="form-actions full-width">
+                            <button type="submit" class="primary-button">
+                                Record payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+
+            <!-- ACCOUNT -->
+            <section class="page-section" id="section-account">
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow">PROFILE</span>
+                        <h1>Account Settings</h1>
+                        <p>View your current account information.</p>
+                    </div>
+                </div>
+
+                <div class="content-card account-card">
+                    <div class="account-avatar" id="accountAvatar">U</div>
+                    <div>
+                        <span class="stat-label">Email address</span>
+                        <h2 id="accountEmail">Loading...</h2>
+                        <p id="accountRole">Customer account</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
